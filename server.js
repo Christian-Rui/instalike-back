@@ -1,5 +1,13 @@
 import express from "express";
+import routes from "./src/routes/postsRoutes.js";
 
+const app = express();
+routes(app);
+
+
+const port = 3000;
+
+// Array de posts de exemplo (será substituído pelos dados do banco de dados)
 const posts = [
     {
         id: 1,
@@ -38,26 +46,18 @@ const posts = [
     }
 ];
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-
+// Inicia o servidor na porta 3000 e exibe uma mensagem no console
 app.listen(port, () => {
-    console.log("Servidor escutando...");
+  console.log("Servidor escutando...");
 });
 
-app.get("/posts", (req, res) => {
-    res.status(200).json(posts);
-});
+// function BuscarPostPorID(id) {
+//     return posts.findIndex((post) => {
+//         return post.id === Number(id);
+//     });
+// }
 
-function BuscarPostPorID(id) {
-    return posts.findIndex((post) => {
-        return post.id === Number(id);
-    });
-}
-
-app.get("/posts/:id", (req, res) => {
-    const index = BuscarPostPorID(req.params.id);
-    res.status(200).json(posts[index]);
-});
+// app.get("/posts/:id", (req, res) => {
+//     const index = BuscarPostPorID(req.params.id);
+//     res.status(200).json(posts[index]);
+// });
