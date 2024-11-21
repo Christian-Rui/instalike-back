@@ -1,4 +1,8 @@
 node_modules
+
+docs
 chave-api.txt
 mongoDB-atlas.txt
 dependencias.txt
+
+.env
