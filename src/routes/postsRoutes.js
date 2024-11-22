@@ -1,12 +1,44 @@
+// Importa as dependências necessárias:
+// - express: Framework para criar aplicações web
+// - multer: Middleware para lidar com uploads de arquivos
+// - listarPosts, postarNovoPost, uploadImagem: Funções do controlador de posts para realizar as respectivas operações
 import express from "express";
-import { listarPosts } from "../controllers/postsController.js";
+import multer from "multer";
+import { listarPosts, postarNovoPost, uploadImagem } from "../controllers/postsController.js";
 
+// Define a rota base para todas as requisições relacionadas a posts
+const nomeRota = "/posts";
+
+// Configura o armazenamento de arquivos enviados (uploads):
+// - destination: Define o diretório onde os arquivos serão salvos
+// - filename: Define o nome do arquivo salvo
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Salva os arquivos na pasta 'uploads'
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Utiliza o nome original do arquivo
+  }
+});
+
+// Cria uma instância do multer com a configuração de armazenamento definida
+const upload = multer({ dest: "./uploads", storage });
+
+// Define as rotas da aplicação:
 const routes = (app) => {
-    // Habilita o parser JSON para lidar com requisições com corpo JSON
-    app.use(express.json());
+  // Habilita o parser JSON para lidar com dados no formato JSON nas requisições
+  app.use(express.json());
 
-    // Rota para obter todos os posts
-    app.get("/posts", listarPosts);
-}
+  // Rota para listar todos os posts (método GET)
+  app.get(nomeRota, listarPosts);
 
+  // Rota para criar um novo post (método POST)
+  app.post(nomeRota, postarNovoPost);
+
+  // Rota para fazer upload de uma imagem (método POST)
+  // - upload.single('imagem'): Configura o multer para lidar com um único arquivo com o nome 'imagem'
+  app.post("/upload", upload.single("imagem"), uploadImagem);
+};
+
+// Exporta a função das rotas para ser utilizada em outros módulos
 export default routes;
