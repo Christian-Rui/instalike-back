@@ -4,7 +4,13 @@
 // - listarPosts, postarNovoPost, uploadImagem: Funções do controlador de posts para realizar as respectivas operações
 import express from "express";
 import multer from "multer";
-import { listarPosts, postarNovoPost, uploadImagem } from "../controllers/postsController.js";
+import cors from "cors";
+import { listarPosts, postarNovoPost, uploadImagem, atualizarNovoPost } from "../controllers/postsController.js";
+
+const corsOptions = {
+  origin: "http://localhost:8000",
+  optionsSuccessStatus: 200
+}
 
 // Define a rota base para todas as requisições relacionadas a posts
 const nomeRota = "/posts";
@@ -29,6 +35,8 @@ const routes = (app) => {
   // Habilita o parser JSON para lidar com dados no formato JSON nas requisições
   app.use(express.json());
 
+  app.use(cors(corsOptions));
+  
   // Rota para listar todos os posts (método GET)
   app.get(nomeRota, listarPosts);
 
@@ -38,6 +46,8 @@ const routes = (app) => {
   // Rota para fazer upload de uma imagem (método POST)
   // - upload.single('imagem'): Configura o multer para lidar com um único arquivo com o nome 'imagem'
   app.post("/upload", upload.single("imagem"), uploadImagem);
+
+  app.put("/upload/:id", atualizarNovoPost );
 };
 
 // Exporta a função das rotas para ser utilizada em outros módulos
